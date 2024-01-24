@@ -5,6 +5,9 @@ definePageMeta({
   layout: "centered",
 });
 
+const router = useRouter()
+
+
 const formData = ref({
   name: "",
   email: "",
@@ -29,7 +32,8 @@ const register = async ()=> {
   //Pel plugin no fa falta indicar el començament de la URL
   try { 
     const res=await axios.post("/register",payload)
-    console.log(res)
+    console.log(res);
+    router.push('/me');
   }catch(error){
     console.error(error);
   }
