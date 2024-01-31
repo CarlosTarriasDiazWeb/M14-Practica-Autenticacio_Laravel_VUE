@@ -7,8 +7,14 @@ definePageMeta({
 
 const router = useRouter()
 
+interface RegisterData {
+  name: string,
+  email: string,
+  password: string,
+  passwordConfirm: string
+}
 
-const formData = ref({
+const formData = ref<RegisterData>({
   name: "",
   email: "",
   password: "",
@@ -17,7 +23,7 @@ const formData = ref({
 
 const register = async ()=> {
 
-  let payload = new FormData();
+  let payload : FormData = new FormData();
   payload.append('name', formData.value.name);
   payload.append('email', formData.value.email);
   payload.append('password', formData.value.password);
@@ -31,7 +37,7 @@ const register = async ()=> {
 
   //Pel plugin no fa falta indicar el començament de la URL
   try { 
-    const res=await axios.post("/register",payload)
+    const res= await axios.post("/register", payload)
     console.log(res);
     router.push('/me');
   }catch(error){

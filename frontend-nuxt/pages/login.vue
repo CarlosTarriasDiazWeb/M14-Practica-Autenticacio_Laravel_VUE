@@ -6,8 +6,12 @@ definePageMeta({
 
 const router = useRouter()
 
+interface loginData {
+  email: string,
+  password : string
+}
 
-const formData = ref({
+const formData = ref<loginData>({
   email: "",
   password: "",
 });
