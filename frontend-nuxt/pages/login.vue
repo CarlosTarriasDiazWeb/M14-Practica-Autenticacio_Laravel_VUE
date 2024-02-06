@@ -2,39 +2,42 @@
 import axios from 'axios';
 definePageMeta({
   layout: "centered",
+  middleware: ["guest"]
 });
+ 
+const {login, formData} = useAuth();
 
-const router = useRouter()
+// const router = useRouter()
 
-interface loginData {
-  email: string,
-  password : string
-}
+// interface loginData {
+//   email: string,
+//   password : string
+// }
 
-const formData = ref<loginData>({
-  email: "",
-  password: "",
-});
+// const formData = ref<loginData>({
+//   email: "",
+//   password: "",
+// });
 
-const login = async ()=> {
+// const login = async ()=> {
 
-  let payload = new FormData();
-  payload.append('email', formData.value.email);
-  payload.append('password', formData.value.password);
+//   let payload = new FormData();
+//   payload.append('email', formData.value.email);
+//   payload.append('password', formData.value.password);
 
-  if (formData.value.email.length < 0 || formData.value.password.length < 0){
-    return;
-  }
+//   if (formData.value.email.length < 0 || formData.value.password.length < 0){
+//     return;
+//   }
 
-  //Pel plugin no fa falta indicar el començament de la URL
-  try { 
-    const res = await axios.post("/login", payload);
-    console.log(res);
-    router.push('/me');
-  }catch(error){
-    console.error(error);
-  }
-}
+//   //Pel plugin no fa falta indicar el començament de la URL
+//   try { 
+//     const res = await axios.post("/login", payload);
+//     console.log(res);
+//     router.push('/me');
+//   }catch(error){
+//     console.error(error);
+//   }
+// }
 
 </script>
 <template>
