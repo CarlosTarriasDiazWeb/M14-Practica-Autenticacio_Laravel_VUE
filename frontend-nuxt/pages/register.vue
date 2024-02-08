@@ -3,59 +3,50 @@
 import axios from 'axios';
 definePageMeta({
   layout: "centered",
+  middleware: ["guest"]
 });
 
-const router = useRouter()
+const {register, formDataRegister} = useAuth();
+// const router = useRouter()
 
-interface RegisterData {
-  name: string,
-  email: string,
-  password: string,
-  passwordConfirm: string
-}
+// interface RegisterData {
+//   name: string,
+//   email: string,
+//   password: string,
+//   passwordConfirm: string
+// }
 
-const formData = ref<RegisterData>({
-  name: "",
-  email: "",
-  password: "",
-  passwordConfirm:""
-});
+// const formData = ref<RegisterData>({
+//   name: "",
+//   email: "",
+//   password: "",
+//   passwordConfirm:""
+// });
 
-const register = async ()=> {
+// const register = async ()=> {
 
-  let payload : FormData = new FormData();
-  payload.append('name', formData.value.name);
-  payload.append('email', formData.value.email);
-  payload.append('password', formData.value.password);
-  payload.append('password_confirmation', formData.value.passwordConfirm);
+//   let payload : FormData = new FormData();
+//   payload.append('name', formData.value.name);
+//   payload.append('email', formData.value.email);
+//   payload.append('password', formData.value.password);
+//   payload.append('password_confirmation', formData.value.passwordConfirm);
 
-  //password-confirmation is needed for laravel fortify validation rules for password.
+//   //password_confirmation is needed for laravel fortify validation rules for password.
   
-  if (formData.value.password !== formData.value.passwordConfirm){
-    return;
-  }
+//   if (formData.value.password !== formData.value.passwordConfirm){
+//     return;
+//   }
 
-  //Pel plugin no fa falta indicar el començament de la URL
-  try { 
-    const res= await axios.post("/register", payload)
-    console.log(res);
-    router.push('/me');
-  }catch(error){
-    console.error(error);
-  }
+//   //Com que tenim plugin no fa falta indicar el començament de la URL
+//   try { 
+//     const res= await axios.post("/register", payload)
+//     console.log(res);
+//     router.push('/me');
+//   }catch(error){
+//     console.error(error);
+//   }
   
-  // axios.post('http://localhost/api/register', payload,{
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  // })
-  // .then((response) =>{
-  //   console.log(response.data);
-  // })
-  // .catch((error) => {
-  //   console.error(error);
-  // });
-}
+//}
 
 </script>
 <template>
@@ -64,22 +55,22 @@ const register = async ()=> {
     <form @submit.prevent="register" novalidate>
       <label>
         <div>Name</div>
-        <input v-model.trim="formData.name" type="text" />
+        <input v-model.trim="formDataRegister.name" type="text" />
       </label>
 
       <label>
         <div>Email</div>
-        <input v-model.trim="formData.email" type="email" />
+        <input v-model.trim="formDataRegister.email" type="email" />
       </label>
 
       <label>
         <div>Password</div>
-        <input v-model.trim="formData.password" type="password" />
+        <input v-model.trim="formDataRegister.password" type="password" />
       </label>
 
       <label>
         <div>Confirm Password</div>
-        <input v-model.trim="formData.passwordConfirm" type="password" />
+        <input v-model.trim="formDataRegister.passwordConfirm" type="password" />
       </label>
 
       <button type="submit" class="btn">Register</button>
@@ -89,6 +80,6 @@ const register = async ()=> {
       Already have an account?
       <NuxtLink class="underline text-lime-600" to="/login">Login</NuxtLink>
     </p>
-    {{ formData }}
+    {{ formDataRegister }}
   </div>
 </template>

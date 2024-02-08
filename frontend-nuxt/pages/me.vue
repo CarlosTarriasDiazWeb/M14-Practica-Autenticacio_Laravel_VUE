@@ -5,22 +5,11 @@ definePageMeta({
   middleware: ["auth"]
 });
 
-// interface User {
-//   id : number,
-//   name: string,
-//   email: string,
-//   email_verified_at : Date | null,
-//   two_factor_secret : string | null,
-//   two_factor_recovery_codes : string | null,
-//   two_factor_confirmed_at : Date | null
-//   created_at : Date,
-//   updated_at : Date
-// }
-
 const {getUser, user} = useAuth();
 
 onMounted(async ()=> {
   //getUserData()
+  //Evitem fer la crida si l'usuari ja ha iniciat sessió.
   if (user.value === null) {
     user.value = await getUser();
   }

@@ -5,7 +5,6 @@ interface loginData {
     password : string
 }
 
-
 interface RegisterData {
   name: string,
   email: string,
@@ -26,6 +25,9 @@ interface User {
 }
 
 export async function getUser(): Promise<User|null> {
+
+  if (user.value !== null) return null;
+
   try {
     const res = await axios.get("/user");
     const user = res.data;
@@ -61,7 +63,6 @@ export const useAuth = () => {
     });
 
     const register = async ()=> {
-
       let payload : FormData = new FormData();
       payload.append('name', formDataRegister.value.name);
       payload.append('email', formDataRegister.value.email);
@@ -70,13 +71,12 @@ export const useAuth = () => {
     
       //password-confirmation is needed for laravel fortify validation rules for password.
       
-      if (formData.value.password !== formDataRegister.value.passwordConfirm){
+      if (formDataRegister.value.password !== formDataRegister.value.passwordConfirm){
         return;
       }
     
-      //Pel plugin no fa falta indicar el començament de la URL
       try { 
-        const res= await axios.post("/register", payload)
+        const res = await axios.post("/register", payload)
         console.log(res);
         router.push('/me');
       }catch(error){
@@ -108,6 +108,9 @@ export const useAuth = () => {
       const logOut = async () => {
         try { 
           const res = await axios.post("/logout");
+
+          //Eliminem les dades del usuari
+          user.value = null;
           console.log(res);
         }catch(error){
           console.error(error);
