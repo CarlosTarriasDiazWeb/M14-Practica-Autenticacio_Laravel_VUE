@@ -12,6 +12,22 @@ const config = useRuntimeConfig();
  axios.defaults.withCredentials = true;
  axios.defaults.headers.withXSRFToken = true;
 
+ //Definim l'interceptor d'Axios a la resposta de la API.
+ axios.interceptors.response.use(
+   response => {
+      return response;
+   },
+   error => {
+      console.log(`Codi d'error -> ${error.response.status} petició rebutjada perquè el usuari no està autenticat.`)
+      // return Promise.reject(error);
+
+      //Rebotem a la pàgina d'inici si l'usuari no està autenticat.
+      if (error.response.status === 401) {
+         navigateTo("/");
+      }
+   }
+ )
+
 //finalment fem una única petició ajax al
 //endpoint configurat per Laravel sanctum per obtenir la cookie CRSF inicial
  await axios.get("/sanctum/csrf-cookie", {

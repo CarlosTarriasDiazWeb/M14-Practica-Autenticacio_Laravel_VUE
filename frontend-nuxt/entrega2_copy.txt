@@ -1,0 +1,6 @@
+Cada vegada que fem login amb un usuari, a la carpeta /storage/framework/sessions/ es crea un arxiu de metadades de la sessió associat a l'usuari.
+Quan borrem aquest arxiu de sessió, això equival a tancar la sessió per tant les rutes de /api/user i /api/links donen un error 401  
+Unauthorized (són rutes de la API protegides) ja que no tenim un usuari autenticat al sistema.
+Al interceptor d'axios hem de recollir aquest codi d'error i gestionar-lo, per exemple per rebotar l'usuari a la pàgina d'inici. 
+Hauríem de aplicar l'interceptor al fitxer del plugin d'Axios axiosPlugin.ts
+
