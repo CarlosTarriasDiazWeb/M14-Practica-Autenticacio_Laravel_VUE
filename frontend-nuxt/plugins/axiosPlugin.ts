@@ -23,7 +23,7 @@ const config = useRuntimeConfig();
 
       //Rebotem a la pàgina d'inici si l'usuari no està autenticat.
       if (error.response.status === 401) {
-         navigateTo("/");
+         navigateTo("/login");
       }
    }
  )

@@ -30,6 +30,7 @@ export async function getUser(): Promise<User|null> {
 
   try {
     const res = await axios.get("/user");
+    //console.log("entro!")
     const user = res.data;
     return {
       ...user,
