@@ -1,60 +1,33 @@
 <script setup lang="ts">
-import axios from 'axios';
+import {ErrorResponse, loginData} from '~~/types';
+import type {FormKitNode} from '@formkit/core';
+import { AxiosError } from 'axios';
+import { handleInvalidForm } from '~~/utils';
+
+
 definePageMeta({
   layout: "centered",
   middleware: ["guest"]
 });
+
+const handleLogin = async (payload: loginData, node?:FormKitNode) => {
+  try {
+    await login(payload)
+  }catch(error) {
+    handleInvalidForm(error, node);
+  }
+}
  
-const {login, formData} = useAuth();
-
-// const router = useRouter()
-
-// interface loginData {
-//   email: string,
-//   password : string
-// }
-
-// const formData = ref<loginData>({
-//   email: "",
-//   password: "",
-// });
-
-// const login = async ()=> {
-
-//   let payload = new FormData();
-//   payload.append('email', formData.value.email);
-//   payload.append('password', formData.value.password);
-
-//   if (formData.value.email.length < 0 || formData.value.password.length < 0){
-//     return;
-//   }
-
-//   //Pel plugin no fa falta indicar el començament de la URL
-//   try { 
-//     const res = await axios.post("/login", payload);
-//     console.log(res);
-//     router.push('/me');
-//   }catch(error){
-//     console.error(error);
-//   }
-// }
+const {login} = useAuth();
 
 </script>
 <template>
   <div class="login">
     <h1>Login</h1>
-    <form @submit.prevent="login" novalidate>
-      <label>
-        <div>Email</div>
-        <input v-model.trim="formData.email" type="email" />
-      </label>
-      <label>
-        <div>Password</div>
-        <input v-model.trim="formData.password" type="password" />
-      </label>
-      <button type="submit" class="btn">Login</button>
-    </form>
-    {{ formData }}
+    <FormKit type="form" submit-label="Login" @submit="handleLogin">
+      <FormKit label="Email" name="email" type="email"/>
+      <FormKit label="Password" name="password" type="password"/>
+    </FormKit>
     <p>
       Don't have an account?
       <NuxtLink class="underline text-lime-600" to="/register"
@@ -63,3 +36,8 @@ const {login, formData} = useAuth();
     </p>
   </div>
 </template>
+<style scoped>
+.error {
+  color : red;
+}
+</style>

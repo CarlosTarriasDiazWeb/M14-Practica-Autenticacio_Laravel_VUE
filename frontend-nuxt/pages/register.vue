@@ -1,58 +1,34 @@
 <script setup lang="ts">
-
-import axios from 'axios';
+import {RegisterData} from '~~/types';
+import type {FormKitNode} from '@formkit/core';
+import { AxiosError } from 'axios';
+import { handleInvalidForm } from '~~/utils';
 definePageMeta({
   layout: "centered",
   middleware: ["guest"]
 });
 
-const {register, formDataRegister} = useAuth();
-// const router = useRouter()
+const {register} = useAuth();
 
-// interface RegisterData {
-//   name: string,
-//   email: string,
-//   password: string,
-//   passwordConfirm: string
-// }
-
-// const formData = ref<RegisterData>({
-//   name: "",
-//   email: "",
-//   password: "",
-//   passwordConfirm:""
-// });
-
-// const register = async ()=> {
-
-//   let payload : FormData = new FormData();
-//   payload.append('name', formData.value.name);
-//   payload.append('email', formData.value.email);
-//   payload.append('password', formData.value.password);
-//   payload.append('password_confirmation', formData.value.passwordConfirm);
-
-//   //password_confirmation is needed for laravel fortify validation rules for password.
-  
-//   if (formData.value.password !== formData.value.passwordConfirm){
-//     return;
-//   }
-
-//   //Com que tenim plugin no fa falta indicar el començament de la URL
-//   try { 
-//     const res= await axios.post("/register", payload)
-//     console.log(res);
-//     router.push('/me');
-//   }catch(error){
-//     console.error(error);
-//   }
-  
-//}
+const handleRegister = async (payload: RegisterData,node?:FormKitNode) => {
+  try {
+    await register(payload)
+  }catch(error) {
+    handleInvalidForm(error, node);
+  }
+}
 
 </script>
 <template>
   <div class="register">
     <h1>Register</h1>
-    <form @submit.prevent="register" novalidate>
+    <FormKit type="form" submit-label="Register" @submit="handleRegister">
+      <FormKit label="Name" name="name" type="text"/>
+      <FormKit label="Email" name="email" type="email"/>
+      <FormKit label="Password" name="password" type="password"/>
+      <FormKit label="Confirm Password" name="password_confirmation" type="password"/>
+    </FormKit>
+    <!-- <form @submit.prevent="register" novalidate>
       <label>
         <div>Name</div>
         <input v-model.trim="formDataRegister.name" type="text" />
@@ -74,12 +50,12 @@ const {register, formDataRegister} = useAuth();
       </label>
 
       <button type="submit" class="btn">Register</button>
-    </form>
+    </form> -->
 
     <p>
       Already have an account?
       <NuxtLink class="underline text-lime-600" to="/login">Login</NuxtLink>
     </p>
-    {{ formDataRegister }}
+   
   </div>
 </template>
