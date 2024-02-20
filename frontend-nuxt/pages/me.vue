@@ -5,18 +5,7 @@ definePageMeta({
   middleware: ["auth"]
 });
 
-const {getUser, user} = useAuth();
-
-onMounted(async ()=> {
-  //getUserData()
-  //Evitem fer la crida si l'usuari ja ha iniciat sessió.
-  if (user.value === null) {
-    user.value = await getUser();
-  }
-  else {
-    return;
-  }
-})
+const {user} = useAuth();
 
 // const userData : {name: string, email: string} = ref({
 //   name: "",

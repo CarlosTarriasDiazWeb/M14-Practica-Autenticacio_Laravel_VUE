@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {RegisterData} from '~~/types';
 import type {FormKitNode} from '@formkit/core';
-import { AxiosError } from 'axios';
 import { handleInvalidForm } from '~~/utils';
+
 definePageMeta({
   layout: "centered",
   middleware: ["guest"]

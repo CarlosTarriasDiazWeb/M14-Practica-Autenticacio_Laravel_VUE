@@ -6,7 +6,7 @@ const {logOut} = useAuth();
 
 onMounted(()=> {
   logOut();
-  router.push('/login');
+  //router.push('/login');
 })
 
 // const logOut = async () => {

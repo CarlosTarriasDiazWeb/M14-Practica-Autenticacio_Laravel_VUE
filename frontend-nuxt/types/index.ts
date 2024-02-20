@@ -14,10 +14,10 @@ export interface User {
   id : number,
   name: string,
   email: string,
-  email_verified_at : Date | null,
-  two_factor_secret : string | null,
-  two_factor_recovery_codes : string | null,
-  two_factor_confirmed_at : Date | null
+  email_verified_at? : Date,
+  two_factor_secret? : string ,
+  two_factor_recovery_codes? : number,
+  two_factor_confirmed_at? : Date 
   created_at : Date,
   updated_at : Date
 }

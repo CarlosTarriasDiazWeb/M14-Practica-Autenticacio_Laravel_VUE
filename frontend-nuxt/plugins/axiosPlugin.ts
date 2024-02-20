@@ -18,15 +18,16 @@ const config = useRuntimeConfig();
       return response;
    },
    error => {
-      // console.log(`Codi d'error -> ${error.response.status} petició rebutjada perquè el usuari no està autenticat.`)
-      // return Promise.reject(error);
-
       //Rebotem a la pàgina d'inici si l'usuari no està autenticat.
       if (error.response.status === 401) {
+         // const {logOut} = useAuth();
+         // logOut();
+         user.value = null;
          navigateTo("/login");
       }
-
-      return Promise.reject(error);
+      else {
+         return Promise.reject(error);
+      }
    }
  )
 

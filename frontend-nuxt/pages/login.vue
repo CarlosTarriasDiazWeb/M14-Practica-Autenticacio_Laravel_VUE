@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import {ErrorResponse, loginData} from '~~/types';
 import type {FormKitNode} from '@formkit/core';
-import { AxiosError } from 'axios';
 import { handleInvalidForm } from '~~/utils';
-
 
 definePageMeta({
   layout: "centered",
   middleware: ["guest"]
 });
+
+ 
+const {login} = useAuth();
 
 const handleLogin = async (payload: loginData, node?:FormKitNode) => {
   try {
@@ -17,8 +18,7 @@ const handleLogin = async (payload: loginData, node?:FormKitNode) => {
     handleInvalidForm(error, node);
   }
 }
- 
-const {login} = useAuth();
+
 
 </script>
 <template>
