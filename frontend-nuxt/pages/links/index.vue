@@ -1,33 +1,32 @@
 <script setup lang="ts">
 import axios from 'axios';
+import { Link } from '~~/types';
+import { TailwindPagination } from 'laravel-vue-pagination';
 
-axios.get("/links");
+
+let links = ref<Link[]>([]);
+let page = ref<number>(1);
+let resdata = {}
+
+const getLinks = async () => {
+  try {
+    let res = await axios.get(`/links?page=${page.value}`);
+    links.value = res.data.data;
+    resdata = res.data;
+  } catch (error) {
+    console.error(error);
+  }
+ 
+}
+
+onMounted(()=> getLinks());
 
 definePageMeta({
   middleware: ["auth"]
 });
 
+watch(page, () => getLinks());
 
-const links = [
-  {
-    short_link: "234jlsfsf",
-    full_link: "https://vueschool.io",
-    views: 3,
-    id: 1,
-  },
-  {
-    short_link: "adfaowerw",
-    full_link: "https://google.com",
-    views: 1,
-    id: 2,
-  },
-  {
-    short_link: "234sfdjaip",
-    full_link: "https://vuejsnation.com/",
-    views: 0,
-    id: 3,
-  },
-];
 </script>
 <template>
   <div>
@@ -56,12 +55,12 @@ const links = [
           </tr>
         </thead>
         <tbody>
-          <tr v-for="link in links">
+          <tr v-for="link in links" :key="link.id">
             <td>
               <a :href="link.full_link" target="_blank">
                 {{ link.full_link.replace(/^http(s?):\/\//, "") }}</a
               >
-            </td>
+            </td> 
             <td>
               <a
                 :href="`${useRuntimeConfig().public.appURL}/${link.short_link}`"
@@ -88,6 +87,7 @@ const links = [
           </tr>
         </tbody>
       </table>
+      <TailwindPagination :data="resdata" @pagination-change-page="page=$event"></TailwindPagination>
       <div class="mt-5 flex justify-center"></div>
     </div>
 

@@ -24,8 +24,8 @@ export interface User {
 
 export interface Link {
     id: number,
-    created_at: Date | null,
-    updated_at: Date | null,
+    created_at: Date,
+    updated_at: Date,
     short_link : string,
     full_link: string,
     user_id : number,
