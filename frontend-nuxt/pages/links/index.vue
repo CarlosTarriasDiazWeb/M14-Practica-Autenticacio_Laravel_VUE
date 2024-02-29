@@ -7,6 +7,7 @@ let links = ref<Link[]>([]);
 let page = ref(useRoute().query.page || 1);
 const queries = ref({
   page:1,
+  sort:"",
   "filter[full_link]":"",
   ...useRoute().query
 });
@@ -54,13 +55,13 @@ watch(queries, async() => {
       <table class="table-fixed w-full">
         <thead>
           <tr>
-            <th class="w-[35%]">Full Link</th>
-            <th class="w-[35%]">Short Link</th>
-            <th class="w-[10%]">Views</th>
+            <TableTh v-model="queries.sort" name="full_link" class="w-[29%]">Full Link</TableTh>
+            <TableTh v-model="queries.sort" name="short_link" class="w-[29%]">Short Link</TableTh>
+            <TableTh v-model="queries.sort" name="views" class="w-[16%]">Views</TableTh>
             <th class="w-[10%]">Edit</th>
             <th class="w-[10%]">Trash</th>
             <th class="w-[6%] text-center">
-              <button><IconRefresh /></button>
+              <button @click="getLinks"><IconRefresh class="w-[15px] relative top-[2px]"/></button>
             </th>
           </tr>
         </thead>
