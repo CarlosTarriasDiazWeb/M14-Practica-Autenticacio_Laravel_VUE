@@ -3,14 +3,21 @@ import axios from 'axios';
 import { Link } from '~~/types';
 import { TailwindPagination } from 'laravel-vue-pagination';
 
-
 let links = ref<Link[]>([]);
-let page = ref<number>(1);
+let page = ref(useRoute().query.page || 1);
+const queries = ref({
+  page:1,
+  "filter[full_link]":"",
+  ...useRoute().query
+});
 let resdata = {}
+let search = ref<string>("");
 
 const getLinks = async () => {
   try {
-    let res = await axios.get(`/links?page=${page.value}`);
+    //@ts-expect-error page es un nombre i aixi està bé
+    const qs = new URLSearchParams(queries.value).toString();
+    let res = await axios.get(`/links?${qs}`);
     links.value = res.data.data;
     resdata = res.data;
   } catch (error) {
@@ -25,7 +32,10 @@ definePageMeta({
   middleware: ["auth"]
 });
 
-watch(page, () => getLinks());
+watch(queries, async() => {
+  getLinks();
+  useRouter().push({query:queries.value});
+}, {deep:true});
 
 </script>
 <template>
@@ -33,7 +43,7 @@ watch(page, () => getLinks());
     <nav class="flex justify-between mb-4 items-center">
       <h1 class="mb-0">My Links</h1>
       <div class="flex items-center">
-        <SearchInput modelValue="" />
+        <SearchInput v-model="queries['filter[full_link]']" />
         <NuxtLink to="/links/create" class="ml-4">
           <IconPlusCircle class="inline" /> Create New
         </NuxtLink>
@@ -87,7 +97,7 @@ watch(page, () => getLinks());
           </tr>
         </tbody>
       </table>
-      <TailwindPagination :data="resdata" @pagination-change-page="page=$event"></TailwindPagination>
+      <TailwindPagination :data="resdata" @pagination-change-page="queries.page=$event"></TailwindPagination>
       <div class="mt-5 flex justify-center"></div>
     </div>
 
