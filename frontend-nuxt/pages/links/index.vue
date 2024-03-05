@@ -2,8 +2,10 @@
 import axios from 'axios';
 import { Link } from '~~/types';
 import { TailwindPagination } from 'laravel-vue-pagination';
+import { useLinks } from '~~/composables/useLinks';
+import { link } from '@formkit/icons';
+// let links = ref<Link[]>([]);
 
-let links = ref<Link[]>([]);
 let page = ref(useRoute().query.page || 1);
 const queries = ref({
   page:1,
@@ -11,21 +13,24 @@ const queries = ref({
   "filter[full_link]":"",
   ...useRoute().query
 });
+const {data, index:getLinks} = useLinks({queries});
+
+
 let resdata = {}
 let search = ref<string>("");
 
-const getLinks = async () => {
-  try {
-    //@ts-expect-error page es un nombre i aixi està bé
-    const qs = new URLSearchParams(queries.value).toString();
-    let res = await axios.get(`/links?${qs}`);
-    links.value = res.data.data;
-    resdata = res.data;
-  } catch (error) {
-    console.error(error);
-  }
+// const getLinks = async () => {
+//   try {
+//     //@ts-expect-error page es un nombre i aixi està bé
+//     const qs = new URLSearchParams(queries.value).toString();
+//     let res = await axios.get(`/links?${qs}`);
+//     links.value = res.data.data;
+//     resdata = res.data;
+//   } catch (error) {
+//     console.error(error);
+//   }
  
-}
+// }
 
 onMounted(()=> getLinks());
 
@@ -34,7 +39,7 @@ definePageMeta({
 });
 
 watch(queries, async() => {
-  getLinks();
+  //getLinks();
   useRouter().push({query:queries.value});
 }, {deep:true});
 
@@ -60,14 +65,15 @@ watch(queries, async() => {
             <TableTh v-model="queries.sort" name="views" class="w-[16%]">Views</TableTh>
             <th class="w-[10%]">Edit</th>
             <th class="w-[10%]">Trash</th>
-            <th class="w-[6%] text-center">
+            <!-- <th class="w-[6%] text-center">
               <button @click="getLinks"><IconRefresh class="w-[15px] relative top-[2px]"/></button>
-            </th>
+            </th> -->
           </tr>
         </thead>
         <tbody>
-          <tr v-for="link in links" :key="link.id">
-            <td>
+          <tr v-for="link in data?.data" :key="link.id">
+            <!-- Per actualitzar de forma reactiva la data de creació del link -->
+            <td :title="`created ${useTimeAgo(link.created_at).value}`">
               <a :href="link.full_link" target="_blank">
                 {{ link.full_link.replace(/^http(s?):\/\//, "") }}</a
               >
@@ -98,7 +104,7 @@ watch(queries, async() => {
           </tr>
         </tbody>
       </table>
-      <TailwindPagination :data="resdata" @pagination-change-page="queries.page=$event"></TailwindPagination>
+      <TailwindPagination :data="{...data}" @pagination-change-page="queries.page=$event"></TailwindPagination>
       <div class="mt-5 flex justify-center"></div>
     </div>
 

@@ -22,14 +22,28 @@ export interface User {
   updated_at : Date
 }
 
-export interface Link {
-    id: number,
-    created_at: Date,
-    updated_at: Date,
-    short_link : string,
-    full_link: string,
-    user_id : number,
-    views: number
+// export interface Link {
+//     id: number,
+//     created_at: Date,
+//     updated_at: Date,
+//     short_link : string,
+//     full_link: string,
+//     user_id : number,
+//     views: number
+// }
+
+export interface RawLink {
+  id: number;
+  short_link: string;
+  full_link: string;
+  views: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Link extends Omit<RawLink, "created_at" | "updated_at"> {
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface ErrorResponse {
@@ -37,22 +51,42 @@ export interface ErrorResponse {
     errors: Record<string,string[]>
 }
 
-export interface PaginateResponse<T> {
-    current_number : number,
-    data : T[],
-    first_page_url: string | null,
-    from: number,
-    last_page: number,
-    last_page_url: string | null,
-    links:{
-        url: string | null,
-        label: string,
-        active: boolean
-    },
-    next_page_url: string | null,
-    path: string,
-    per_page: number,
-    prev_page_url: string | null,
-    to: number,
-    total: number
-}
+// export interface PaginateResponse<T> {
+//     current_number : number,
+//     data : T[],
+//     first_page_url: string | null,
+//     from: number,
+//     last_page: number,
+//     last_page_url: string | null,
+//     links:{
+//         url: string | null,
+//         label: string,
+//         active: boolean
+//     },
+//     next_page_url: string | null,
+//     path: string,
+//     per_page: number,
+//     prev_page_url: string | null,
+//     to: number,
+//     total: number
+// }
+
+export interface PaginatedResponse<T> {
+    current_page: number;
+    data: T[];
+    first_page_url: string | null;
+    from: number;
+    last_page: number;
+    last_page_url: string | null;
+    links: {
+      url: string | null;
+      label: string;
+      active: boolean;
+    }[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+  }
