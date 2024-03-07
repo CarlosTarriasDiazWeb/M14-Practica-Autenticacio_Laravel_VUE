@@ -13,7 +13,7 @@ const queries = ref({
   "filter[full_link]":"",
   ...useRoute().query
 });
-const {data, index:getLinks} = useLinks({queries});
+const {data, index:getLinks, destroy} = useLinks({queries});
 
 
 let resdata = {}
@@ -33,6 +33,13 @@ let search = ref<string>("");
 // }
 
 onMounted(()=> getLinks());
+
+async function handleDelete(id:number) {
+    await destroy(id);
+    if(data.value) {
+      data.value.data = data.value?.data.filter(link => link.id != id);
+    }
+}
 
 definePageMeta({
   middleware: ["auth"]
@@ -65,9 +72,9 @@ watch(queries, async() => {
             <TableTh v-model="queries.sort" name="views" class="w-[16%]">Views</TableTh>
             <th class="w-[10%]">Edit</th>
             <th class="w-[10%]">Trash</th>
-            <!-- <th class="w-[6%] text-center">
-              <button @click="getLinks"><IconRefresh class="w-[15px] relative top-[2px]"/></button>
-            </th> -->
+            <th class="w-[6%] text-center">
+              <button @click="getLinks()"><IconRefresh class="w-[15px] relative top-[2px]"/></button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -98,7 +105,7 @@ watch(queries, async() => {
               /></NuxtLink>
             </td>
             <td>
-              <button><IconTrash /></button>
+              <button @click="handleDelete(link.id as number)"><IconTrash /></button>
             </td>
             <td></td>
           </tr>
